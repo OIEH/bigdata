@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import rc
 
-# 한글 폰트 설정 (그래프에서 한글 깨짐 방지)
+# 한글 폰트 설정
 rc('font', family='Malgun Gothic')
 
 # 데이터 파일 경로 지정
@@ -18,7 +18,7 @@ data_melted['Hour'] = data_melted['Hour'].str.replace('시', '').astype(int)
 data_melted['Month'] = data_melted['날짜'].dt.month
 data_melted['DayOfWeek'] = data_melted['날짜'].dt.dayofweek  # 0=월요일, 6=일요일
 
-# 월을 계절로 매핑하는 함수 정의 (봄: 3-5, 여름: 6-8, 가을: 9-11, 겨울: 12-2)
+# 월을 계절 치환 (봄: 3-5, 여름: 6-8, 가을: 9-11, 겨울: 12-2)
 def map_season(month):
     if month in [3, 4, 5]:
         return 'Spring'
@@ -53,7 +53,7 @@ holidays = [
 ]
 holidays = pd.to_datetime(holidays)
 
-# 1. 월별 그래프 그리기
+# 월별 그래프 그리기
 plt.figure(figsize=(14, 8))
 for month in range(1, 13):
     month_data = data_melted[data_melted['Month'] == month]
@@ -74,7 +74,7 @@ plt.show()
 # 계절 순서대로 정렬 (봄, 여름, 가을, 겨울)
 seasonal_top_months = seasonal_top_months.set_index('Season').loc[['Spring', 'Summer', 'Fall', 'Winter']].reset_index()
 
-# 2. 계절별로 가장 차이가 큰 월의 일별 그래프 그리기
+# 계절별로 가장 차이가 큰 월의 일별 그래프 그리기
 for _, row in seasonal_top_months.iterrows():
     month = row['Month']
     season = row['Season']
